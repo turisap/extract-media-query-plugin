@@ -1,0 +1,10 @@
+{
+    "type": "object",
+    "properties": {
+        "oneFile": {
+            "description": "Whether or not loader should emit one file with all queries",
+            "type": "boolean"
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+var LastCallWebpackPlugin = require("last-call-webpack-plugin");
 const { ExtractMediaQueriesPlugin } = require("./src/plugin/plugin");
 
 module.exports = {
@@ -34,7 +35,21 @@ module.exports = {
             template: path.resolve(__dirname, "src", "index.html"),
         }),
         new CleanWebpackPlugin(),
-        // new ExtractMediaQueriesPlugin(),
+        new LastCallWebpackPlugin({
+            assetProcessors: [
+                {
+                    regExp: /\.js$/,
+                    processor: (assetName, asset) =>
+                        Promise.resolve(
+                            "// Author: Turisap \n" + asset.source(),
+                        ),
+                },
+            ],
+            canPrint: true,
+        }),
+        new ExtractMediaQueriesPlugin({
+            oneFile: true,
+        }),
     ],
 
     devServer: {
