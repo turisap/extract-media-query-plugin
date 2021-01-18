@@ -1,7 +1,8 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-var LastCallWebpackPlugin = require("last-call-webpack-plugin");
+const LastCallWebpackPlugin = require("last-call-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { ExtractMediaQueriesPlugin } = require("./src/plugin/plugin");
 
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
         rules: [
             {
                 test: /\.scss$/i,
-                use: ["style-loader", "css-loader", "sass-loader"],
+                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
             },
             {
                 test: /\.(ts|tsx)$/,
@@ -35,6 +36,9 @@ module.exports = {
             template: path.resolve(__dirname, "src", "index.html"),
         }),
         new CleanWebpackPlugin(),
+        new MiniCssExtractPlugin({
+            linkType: "text/css",
+        }),
         new LastCallWebpackPlugin({
             assetProcessors: [
                 {
@@ -52,9 +56,11 @@ module.exports = {
         }),
     ],
 
+    devtool: "eval-cheap-source-map",
+
     devServer: {
         contentBase: path.join(__dirname, "dist"),
-        compress: true,
+        compress: false,
         port: 9000,
     },
 };
