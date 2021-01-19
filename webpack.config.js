@@ -48,6 +48,13 @@ module.exports = {
                             "// Author: Turisap \n" + asset.source(),
                         ),
                 },
+                {
+                    regExp: /\.css$/,
+                    processor: (assetName, asset, get) =>
+                        Promise.resolve(
+                            "// Author: Turisap \n" + asset.source(),
+                        ),
+                },
             ],
             canPrint: true,
         }),

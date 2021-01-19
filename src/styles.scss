@@ -2,3 +2,15 @@ html {
     background: #cecece;
     color: #585050;
 }
+
+@media (max-width: 500px) {
+    html {
+        background: red;
+    }
+}
+
+@media (max-width: 1200px) {
+    html {
+        background: blue;
+    }
+}

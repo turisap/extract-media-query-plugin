@@ -1,1 +1,1 @@
-# webpack-loader
+# webpack-plugin
