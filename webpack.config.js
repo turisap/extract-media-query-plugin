@@ -36,31 +36,27 @@ module.exports = {
             template: path.resolve(__dirname, "src", "index.html"),
         }),
         new CleanWebpackPlugin(),
-        new MiniCssExtractPlugin({
-            linkType: "text/css",
-        }),
-        new LastCallWebpackPlugin({
-            assetProcessors: [
-                {
-                    regExp: /\.js$/,
-                    processor: (assetName, asset) =>
-                        Promise.resolve(
-                            "// Author: Turisap \n" + asset.source(),
-                        ),
-                },
-                {
-                    regExp: /\.css$/,
-                    processor: (assetName, asset, get) =>
-                        Promise.resolve(
-                            "// Author: Turisap \n" + asset.source(),
-                        ),
-                },
-            ],
-            canPrint: true,
-        }),
         new ExtractMediaQueriesPlugin({
             oneFile: true,
         }),
+        new MiniCssExtractPlugin({
+            linkType: "text/css",
+        }),
+        // new LastCallWebpackPlugin({
+        //     assetProcessors: [
+        //         {
+        //             regExp: /\.js$/,
+        //             processor: (assetName, asset) =>
+        //                 Promise.resolve("// Author: Turisap \n" + asset.source()),
+        //         },
+        //         {
+        //             regExp: /\.css$/,
+        //             processor: (assetName, asset, get) =>
+        //                 Promise.resolve("// Author: Turisap \n" + asset.source()),
+        //         },
+        //     ],
+        //     canPrint: true,
+        // }),
     ],
 
     devtool: "eval-cheap-source-map",

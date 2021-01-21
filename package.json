@@ -6,7 +6,7 @@
     "author": "turisap <kirillshakirov57@gmail.com>",
     "license": "MIT",
     "scripts": {
-        "start": "webpack serve",
+        "start": "webpack serve -- node--trace-deprecation",
         "build": "webpack --env production",
         "lint:es": "eslint --ext .js src/"
     },
