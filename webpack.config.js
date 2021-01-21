@@ -34,6 +34,9 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, "src", "index.html"),
+            chunks: {
+                k: "k.css",
+            },
         }),
         new CleanWebpackPlugin(),
         new ExtractMediaQueriesPlugin({
