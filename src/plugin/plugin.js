@@ -7,21 +7,20 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 // TODO: check if it works with css-modules
 // TODO: add comment to each media query about which src file it comes from
 
-//FIXME: fix BREAKING CHANGE WARNING FROM WEBPACK
-
 class ExtractMediaQueriesPlugin {
     static pluginName = "ExtractMediaQueriesPlugin";
     static optionsList = ["oneFile"];
     static mediaQueryRegex = new RegExp("@media[^{]+{([^{}]*{[^}{]*})+[^}]+}", "g");
     static tapOptions = {
         name: ExtractMediaQueriesPlugin.pluginName,
-        stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
+        stage: Compilation.PROCESS_ASSETS_STAGE_PRE_PROCESS,
     };
 
     #options;
 
     constructor(options) {
         this.#options = options;
+        this.#options.fileName = this.#options.fileName ?? "queries.css";
         this._validateOptions();
     }
 
@@ -32,16 +31,15 @@ class ExtractMediaQueriesPlugin {
     }
 
     _createAsset(queries, compilation) {
-        // TODO: make 'em dynamic
-        // compilation.hooks.processAssets.tapPromise(
-        //     ExtractMediaQueriesPlugin.tapOptions,
-        //     (assets) => {
-        //         console.log("EXISTING", assets);
-        //         ;
-        //     },
-        // );
-
-        compilation.emitAsset("compile.css", new RawSource(queries));
+        // console.log(compilation.hooks);
+        compilation.hooks.processAssets.tap(
+            ExtractMediaQueriesPlugin.tapOptions,
+            async (assets) => {
+                console.log("EXISTING", assets);
+            },
+        );
+        // FIXME: why doesn't it work?
+        compilation.emitAsset(this.#options.fileName, new RawSource(queries));
     }
 
     _removeQueriesFromSource() {
@@ -63,8 +61,6 @@ class ExtractMediaQueriesPlugin {
             return /^\w+.css$/.test(assetName);
         });
 
-        console.log("ASSETS", assets);
-
         if (!Boolean(assetStyleNames.length)) return Promise.resolve(null);
 
         assetStyleNames.forEach((styleAsset) => {
@@ -81,27 +77,14 @@ class ExtractMediaQueriesPlugin {
             console.log("The compiler is starting a new compilation...");
 
             // Static Plugin interface |compilation |HOOK NAME | register listener
-            HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync(
-                "MyPlugin", // <-- Set a meaningful name here for stacktraces
+            HtmlWebpackPlugin.getHooks(compilation).beforeAssetTagGeneration.tapAsync(
+                ExtractMediaQueriesPlugin.pluginName,
                 (data, cb) => {
-                    console.log(data);
-                    // Manipulate the content
-                    data.html =
-                        "<!DOCTYPE html>\n" +
-                        '<html lang="en">\n' +
-                        "    <head>\n" +
-                        '        <meta charset="UTF-8" />\n' +
-                        "        <title>Webpack media extractor plugin</title>\n" +
-                        '    <link href="main.css" rel="stylesheet">' +
-                        '    <link href="compile.css" rel="stylesheet">' +
-                        "</head>\n" +
-                        "    <body>\n" +
-                        "        <p>Hello plugin!</p>\n" +
-                        '        <div id="app"></div>\n' +
-                        '    <script src="main.js"></script></body>\n' +
-                        "</html>\n";
-                    // Tell webpack to move on
-                    cb(null, data);
+                    data.assets = {
+                        ...data.assets,
+                        css: [...data.assets.css, this.#options.fileName],
+                    };
+                    cb();
                 },
             );
         });

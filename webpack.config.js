@@ -34,9 +34,6 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, "src", "index.html"),
-            chunks: {
-                k: "k.css",
-            },
         }),
         new CleanWebpackPlugin(),
         new ExtractMediaQueriesPlugin({
@@ -45,21 +42,6 @@ module.exports = {
         new MiniCssExtractPlugin({
             linkType: "text/css",
         }),
-        // new LastCallWebpackPlugin({
-        //     assetProcessors: [
-        //         {
-        //             regExp: /\.js$/,
-        //             processor: (assetName, asset) =>
-        //                 Promise.resolve("// Author: Turisap \n" + asset.source()),
-        //         },
-        //         {
-        //             regExp: /\.css$/,
-        //             processor: (assetName, asset, get) =>
-        //                 Promise.resolve("// Author: Turisap \n" + asset.source()),
-        //         },
-        //     ],
-        //     canPrint: true,
-        // }),
     ],
 
     devtool: "eval-cheap-source-map",
