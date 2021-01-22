@@ -31,14 +31,6 @@ class ExtractMediaQueriesPlugin {
     }
 
     _createAsset(queries, compilation) {
-        // console.log(compilation.hooks);
-        compilation.hooks.processAssets.tap(
-            ExtractMediaQueriesPlugin.tapOptions,
-            async (assets) => {
-                console.log("EXISTING", assets);
-            },
-        );
-        // FIXME: why doesn't it work?
         compilation.emitAsset(this.#options.fileName, new RawSource(queries));
     }
 
@@ -55,6 +47,10 @@ class ExtractMediaQueriesPlugin {
         return queries;
     }
 
+    _extractRestStyles(source) {
+        return source.replace(ExtractMediaQueriesPlugin.mediaQueryRegex, "");
+    }
+
     _process(compilation) {
         const assets = compilation.assets;
         const assetStyleNames = Object.keys(assets).filter((assetName) => {
@@ -64,9 +60,12 @@ class ExtractMediaQueriesPlugin {
         if (!Boolean(assetStyleNames.length)) return Promise.resolve(null);
 
         assetStyleNames.forEach((styleAsset) => {
-            const queries = this._extractQueries(assets[styleAsset].source());
+            const styleSrc = assets[styleAsset].source();
+            const queries = this._extractQueries(styleSrc);
 
             this._createAsset(queries, compilation);
+
+            assets[styleAsset] = new RawSource(this._extractRestStyles(styleSrc));
         });
 
         return Promise.resolve();
@@ -76,7 +75,6 @@ class ExtractMediaQueriesPlugin {
         compiler.hooks.compilation.tap("MyPlugin", (compilation) => {
             console.log("The compiler is starting a new compilation...");
 
-            // Static Plugin interface |compilation |HOOK NAME | register listener
             HtmlWebpackPlugin.getHooks(compilation).beforeAssetTagGeneration.tapAsync(
                 ExtractMediaQueriesPlugin.pluginName,
                 (data, cb) => {

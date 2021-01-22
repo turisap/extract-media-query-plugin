@@ -3,6 +3,10 @@ html {
     color: #585050;
 }
 
+p {
+    margin: 0;
+}
+
 @media (max-width: 500px) {
     html {
         background: red;
