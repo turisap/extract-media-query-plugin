@@ -4,8 +4,7 @@ const { RawSource } = require("webpack-sources");
 const { Compilation } = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-// TODO: check if it works with css-modules
-// TODO: add comment to each media query about which src file it comes from
+// TODO: sorting queries
 
 class ExtractMediaQueriesPlugin {
     static pluginName = "ExtractMediaQueriesPlugin";
@@ -17,9 +16,11 @@ class ExtractMediaQueriesPlugin {
     };
 
     #options;
+    #sortingMap;
 
     constructor(options) {
         this.#options = options;
+        this.#sortingMap = {};
         this.#options.fileName = this.#options.fileName ?? "queries.css";
         this._validateOptions();
     }
@@ -30,21 +31,43 @@ class ExtractMediaQueriesPlugin {
         });
     }
 
+    _sortQueries(queries) {
+        queries.forEach((query) => {
+            const breakPoint = query.match(/\(\w+-\w+:\s*\d+px\)/g)[0];
+            const pixelSize = breakPoint.match(/\d+/g)[0];
+
+            if (this.#sortingMap[pixelSize]) {
+                this.#sortingMap[pixelSize].push(query);
+            } else {
+                this.#sortingMap[pixelSize] = [query];
+            }
+        });
+
+        return Object.keys(this.#sortingMap)
+            .sort()
+            .reduce((obj, key) => {
+                obj[key] = this.#sortingMap[key];
+                return obj;
+            }, {});
+    }
+
     _createAsset(queries, compilation) {
         compilation.emitAsset(this.#options.fileName, new RawSource(queries));
     }
 
-    _removeQueriesFromSource() {
-        // NEXT: you need to find out how to remove queries from the source
-        // and fix the breaking change warging
-    }
-
     _extractQueries(source) {
-        const queries = source
-            .match(ExtractMediaQueriesPlugin.mediaQueryRegex)
-            .join("\n \n");
+        const queries = source.match(ExtractMediaQueriesPlugin.mediaQueryRegex);
+        const sorted = this._sortQueries(queries);
 
-        return queries;
+        let output = "";
+
+        for (let breakPoint of Object.keys(sorted)) {
+            output += `/* This is the ${breakPoint}px width group */ \n`;
+            output += sorted[breakPoint].join("\n\n");
+            output += "\n\n";
+        }
+
+        return output;
     }
 
     _extractRestStyles(source) {
@@ -90,8 +113,8 @@ class ExtractMediaQueriesPlugin {
         compiler.hooks.emit.tapPromise(
             ExtractMediaQueriesPlugin.pluginName,
             (compilation) => {
-                return this._process(compilation).then((result) => {
-                    return "asdlkfj";
+                return this._process(compilation).then(() => {
+                    return compilation;
                 });
             },
         );

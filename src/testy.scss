@@ -1,3 +1,32 @@
 .testy {
     color: black;
 }
+@media (max-width: 1200px) {
+    #canvas {
+        background: transparent;
+    }
+}
+
+@media (min-width: 500px) {
+    .me {
+        border-radius: 5px;
+    }
+}
+
+@media (min-width: 100px) {
+    section {
+        border-radius: 5px;
+    }
+}
+
+@media (min-width: 500px) {
+    div {
+        opacity: 0.5;
+    }
+}
+
+@media (max-width: 700px) {
+    span {
+        color: red;
+    }
+}
