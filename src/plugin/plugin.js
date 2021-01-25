@@ -4,7 +4,7 @@ const { RawSource } = require("webpack-sources");
 const { Compilation } = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-// TODO: sorting queries
+// TODO: sort max and min width
 
 class ExtractMediaQueriesPlugin {
     static pluginName = "ExtractMediaQueriesPlugin";
@@ -33,13 +33,16 @@ class ExtractMediaQueriesPlugin {
 
     _sortQueries(queries) {
         queries.forEach((query) => {
-            const breakPoint = query.match(/\(\w+-\w+:\s*\d+px\)/g)[0];
-            const pixelSize = breakPoint.match(/\d+/g)[0];
+            const breakPoint = query.match(/\(\w+-\w+:\s*\d+px\)/g)?.[0];
+            const pixelSize = breakPoint?.match(/\d+/g)[0];
+            const groupTitle = pixelSize
+                ? `${pixelSize}px width`
+                : "not dimensions related";
 
-            if (this.#sortingMap[pixelSize]) {
-                this.#sortingMap[pixelSize].push(query);
+            if (this.#sortingMap[groupTitle]) {
+                this.#sortingMap[groupTitle].push(query);
             } else {
-                this.#sortingMap[pixelSize] = [query];
+                this.#sortingMap[groupTitle] = [query];
             }
         });
 
@@ -62,9 +65,9 @@ class ExtractMediaQueriesPlugin {
         let output = "";
 
         for (let breakPoint of Object.keys(sorted)) {
-            output += `/* This is the ${breakPoint}px width group */ \n`;
-            output += sorted[breakPoint].join("\n\n");
-            output += "\n\n";
+            output += `/* This is the ${breakPoint} group */\n${sorted[breakPoint].join(
+                "\n\n",
+            )}\n\n`;
         }
 
         return output;
@@ -95,20 +98,21 @@ class ExtractMediaQueriesPlugin {
     }
 
     apply(compiler) {
-        compiler.hooks.compilation.tap("MyPlugin", (compilation) => {
-            console.log("The compiler is starting a new compilation...");
-
-            HtmlWebpackPlugin.getHooks(compilation).beforeAssetTagGeneration.tapAsync(
-                ExtractMediaQueriesPlugin.pluginName,
-                (data, cb) => {
-                    data.assets = {
-                        ...data.assets,
-                        css: [...data.assets.css, this.#options.fileName],
-                    };
-                    cb();
-                },
-            );
-        });
+        compiler.hooks.compilation.tap(
+            ExtractMediaQueriesPlugin.pluginName,
+            (compilation) => {
+                HtmlWebpackPlugin.getHooks(compilation).beforeAssetTagGeneration.tapAsync(
+                    ExtractMediaQueriesPlugin.pluginName,
+                    (data, cb) => {
+                        data.assets = {
+                            ...data.assets,
+                            css: [...data.assets.css, this.#options.fileName],
+                        };
+                        cb();
+                    },
+                );
+            },
+        );
 
         compiler.hooks.emit.tapPromise(
             ExtractMediaQueriesPlugin.pluginName,

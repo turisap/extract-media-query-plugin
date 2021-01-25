@@ -18,3 +18,9 @@ p {
         background: blue;
     }
 }
+
+@media only screen {
+    p {
+        color: red;
+    }
+}
