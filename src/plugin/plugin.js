@@ -38,7 +38,7 @@ class ExtractMediaQueriesPlugin {
 
         const breakPoint = query.match(/\(\w+-\w+:\s*\d+px\)/g)?.[0];
         const pixelSize = breakPoint?.match(/\d+/g)[0];
-        const groupTitle = pixelSize ? `${pixelSize}px width` : this.#nonDimesnionRelated;
+        const groupTitle = pixelSize ? `${pixelSize}` : this.#nonDimesnionRelated;
 
         const subGroup = isMaxWidth
             ? "max"
@@ -70,7 +70,7 @@ class ExtractMediaQueriesPlugin {
         });
 
         return Object.keys(this.#sortingMap)
-            .sort()
+            .sort((a, b) => a - b)
             .reduce((obj, key) => {
                 obj[key] = this.#sortingMap[key];
                 return obj;
