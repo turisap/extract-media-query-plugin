@@ -4,8 +4,6 @@ const { RawSource } = require("webpack-sources");
 const { Compilation } = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-// TODO: sort max and min width
-
 class ExtractMediaQueriesPlugin {
     static pluginName = "ExtractMediaQueriesPlugin";
     static optionsList = ["oneFile"];
@@ -17,6 +15,9 @@ class ExtractMediaQueriesPlugin {
 
     #options;
     #sortingMap;
+    #nonDimesnionRelated = "not dimensions related";
+    #maxGroup = "max";
+    #minGroup = "min";
 
     constructor(options) {
         this.#options = options;
@@ -31,19 +32,41 @@ class ExtractMediaQueriesPlugin {
         });
     }
 
+    _addToQueryGroup(query) {
+        const isMaxWidth = /\(max-width:/.test(query);
+        const isMinWidth = /\(min-width:/.test(query);
+
+        const breakPoint = query.match(/\(\w+-\w+:\s*\d+px\)/g)?.[0];
+        const pixelSize = breakPoint?.match(/\d+/g)[0];
+        const groupTitle = pixelSize ? `${pixelSize}px width` : this.#nonDimesnionRelated;
+
+        const subGroup = isMaxWidth
+            ? "max"
+            : isMinWidth
+            ? "min"
+            : this.#nonDimesnionRelated;
+
+        if (this.#sortingMap[groupTitle]) {
+            this.#sortingMap[groupTitle][subGroup].push(query);
+        } else {
+            if (subGroup !== this.#nonDimesnionRelated) {
+                this.#sortingMap[groupTitle] = {
+                    min: [],
+                    max: [],
+                };
+
+                this.#sortingMap[groupTitle][subGroup].push(query);
+            } else {
+                this.#sortingMap[groupTitle] = {
+                    [this.#nonDimesnionRelated]: [query],
+                };
+            }
+        }
+    }
+
     _sortQueries(queries) {
         queries.forEach((query) => {
-            const breakPoint = query.match(/\(\w+-\w+:\s*\d+px\)/g)?.[0];
-            const pixelSize = breakPoint?.match(/\d+/g)[0];
-            const groupTitle = pixelSize
-                ? `${pixelSize}px width`
-                : "not dimensions related";
-
-            if (this.#sortingMap[groupTitle]) {
-                this.#sortingMap[groupTitle].push(query);
-            } else {
-                this.#sortingMap[groupTitle] = [query];
-            }
+            this._addToQueryGroup(query);
         });
 
         return Object.keys(this.#sortingMap)
@@ -65,9 +88,13 @@ class ExtractMediaQueriesPlugin {
         let output = "";
 
         for (let breakPoint of Object.keys(sorted)) {
-            output += `/* This is the ${breakPoint} group */\n${sorted[breakPoint].join(
-                "\n\n",
-            )}\n\n`;
+            output += `/* ******** This is the ${breakPoint} group ******* */\n\n`;
+
+            for (let subgroup of Object.keys(sorted[breakPoint])) {
+                output += `/* This is ${subgroup} subgroup */\n${sorted[breakPoint][
+                    subgroup
+                ].join("\n\n")}\n\n`;
+            }
         }
 
         return output;

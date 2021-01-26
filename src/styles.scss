@@ -13,9 +13,33 @@ p {
     }
 }
 
+@media (min-width: 700px) {
+    code {
+        background: gree;
+    }
+}
+
+@media only screen {
+    div {
+        color: red;
+    }
+}
+
+@media (min-width: 1200px) {
+    #user {
+        border: 1px solid grey;
+    }
+}
+
 @media (max-width: 1200px) {
     p {
         background: blue;
+    }
+}
+
+@media (max-width: 100px) {
+    span {
+        border-radius: 445px;
     }
 }
 
