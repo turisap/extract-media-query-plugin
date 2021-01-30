@@ -96,9 +96,12 @@ class ExtractMediaQueriesPlugin {
             output += `/* ******** This is the ${breakPoint} group ******* */\n\n`;
 
             for (let subgroup of Object.keys(sorted[breakPoint])) {
-                output += `/* This is ${subgroup} subgroup */\n${sorted[breakPoint][
-                    subgroup
-                ].join("\n\n")}\n\n`;
+                const queries = sorted[breakPoint][subgroup];
+                if (queries.length) {
+                    output += `/* This is ${subgroup} subgroup */\n${queries.join(
+                        "\n\n",
+                    )}\n\n`;
+                }
             }
         }
 
@@ -143,15 +146,18 @@ class ExtractMediaQueriesPlugin {
                         cb();
                     },
                 );
-            },
-        );
 
-        compiler.hooks.emit.tapPromise(
-            ExtractMediaQueriesPlugin.pluginName,
-            (compilation) => {
-                return this._process(compilation).then(() => {
-                    return compilation;
-                });
+                compilation.hooks.processAssets.tapPromise(
+                    {
+                        name: ExtractMediaQueriesPlugin.pluginName,
+                        stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
+                    },
+                    () => {
+                        this._process(compilation);
+
+                        return Promise.resolve();
+                    },
+                );
             },
         );
     }
