@@ -1,7 +1,6 @@
 const path = require("path");
 
 module.exports = (env) => {
-    console.log(env);
     return {
         entry: "./src/plugin/index.js",
         mode: env.production ? "production" : "development",
@@ -33,18 +32,21 @@ module.exports = (env) => {
 
         resolve: {
             fallback: {
+                buffer: require.resolve("buffer/"),
+                vm: require.resolve("vm-browserify"),
+                os: require.resolve("os-browserify/browser"),
+                tty: require.resolve("tty-browserify"),
+                constants: require.resolve("constants-browserify"),
+                assert: require.resolve("assert/"),
+                path: require.resolve("path-browserify"),
+                crypto: require.resolve("crypto-browserify"),
+                https: require.resolve("https-browserify"),
+                http: require.resolve("stream-http"),
+                stream: require.resolve("stream-browserify"),
                 fs: false,
-                tls: false,
-                net: false,
-                path: false,
-                zlib: false,
-                http: false,
-                https: false,
-                stream: false,
-                crypto: false,
-            },
-            alias: {
-                util: require.resolve("util/"),
+                console: require.resolve("console-browserify"),
+                child_process: false,
+                worker_threads: false,
             },
         },
     };
