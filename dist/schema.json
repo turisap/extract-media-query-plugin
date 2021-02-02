@@ -1,0 +1,18 @@
+{
+    "type": "object",
+    "properties": {
+        "oneFile": {
+            "description": "Whether or not loader should emit one file with all queries",
+            "type": "boolean"
+        },
+        "fileName": {
+            "description": "Output filename",
+            "type": "string"
+        },
+        "srcComment": {
+            "description": "Whether to include comment about which src file a particular query comes from",
+            "type": "boolean"
+        }
+    },
+    "additionalProperties": false
+}

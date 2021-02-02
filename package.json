@@ -9,10 +9,12 @@
         "start": "webpack serve -- node--trace-deprecation",
         "build": "webpack --env production",
         "build:lib": "webpack --config ./webpack.config-lib.js --env production",
+        "build:babel": "cross-env NODE_ENV=production babel src/plugin/** -d dist --copy-files",
         "lint:es": "eslint --ext .js src/"
     },
     "dependencies": {
         "awesome-typescript-loader": "^5.2.1",
+        "cross-env": "^7.0.3",
         "html-webpack-plugin": "^4.5.1",
         "last-call-webpack-plugin": "^3.0.0",
         "react": "^17.0.1",
@@ -21,6 +23,7 @@
         "webpack-sources": "^2.2.0"
     },
     "devDependencies": {
+        "@babel/cli": "^7.12.10",
         "@babel/core": "^7.12.10",
         "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@babel/preset-env": "^7.12.11",
