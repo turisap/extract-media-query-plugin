@@ -1,15 +1,19 @@
 {
     "name": "extract-media-query-plugin",
-    "version": "1.0.2",
-    "main": "index.js",
+    "version": "1.0.3",
+    "main": "./lib/index.js",
+    "files": [
+        "./lib/index.js",
+        "./lib/schema.json"
+    ],
     "repository": "git@github.com:turisap/extract-media-query-plugin.git",
     "author": "turisap <kirillshakirov57@gmail.com>",
     "license": "MIT",
     "scripts": {
         "start": "webpack serve -- node--trace-deprecation",
         "build": "webpack --env production",
-        "build:lib": "webpack --config ./webpack.config-lib.js --env production",
-        "build:babel": "cross-env NODE_ENV=production babel src/plugin/** -d dist --copy-files",
+        "prepublish": "yarn run build:lib",
+        "build:lib": "cross-env NODE_ENV=production babel src/plugin/** -d lib --copy-files",
         "lint:es": "eslint --ext .js src/"
     },
     "dependencies": {
