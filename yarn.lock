@@ -2750,6 +2750,20 @@ extglob@^2.0.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
+extract-media-query-plugin@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/extract-media-query-plugin/-/extract-media-query-plugin-1.0.0.tgz#69f9e29deea4223eca1bce849a24f3135a57c906"
+  integrity sha512-pgzipZNoO62D9kba0G9Im8T1dd4n3wEElzVctX3wDCT/PbGazyxWTuDnjyraeGcgLfi3GGwjXD3c03Scp1O6LQ==
+  dependencies:
+    awesome-typescript-loader "^5.2.1"
+    cross-env "^7.0.3"
+    html-webpack-plugin "^4.5.1"
+    last-call-webpack-plugin "^3.0.0"
+    react "^17.0.1"
+    react-dom "^17.0.1"
+    util "^0.12.3"
+    webpack-sources "^2.2.0"
+
 extsprintf@1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.3.0.tgz#96918440e3041a7a414f8c52e3c574eb3c3e1e05"

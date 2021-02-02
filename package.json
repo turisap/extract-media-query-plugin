@@ -1,8 +1,8 @@
 {
-    "name": "loader",
+    "name": "extract-media-query-plugin",
     "version": "1.0.0",
     "main": "index.js",
-    "repository": "git@github.com:turisap/webpack-loader.git",
+    "repository": "git@github.com:turisap/extract-media-query-plugin.git",
     "author": "turisap <kirillshakirov57@gmail.com>",
     "license": "MIT",
     "scripts": {
@@ -15,6 +15,7 @@
     "dependencies": {
         "awesome-typescript-loader": "^5.2.1",
         "cross-env": "^7.0.3",
+        "extract-media-query-plugin": "^1.0.0",
         "html-webpack-plugin": "^4.5.1",
         "last-call-webpack-plugin": "^3.0.0",
         "react": "^17.0.1",
