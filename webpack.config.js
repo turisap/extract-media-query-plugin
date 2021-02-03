@@ -2,7 +2,8 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { ExtractMediaQueriesPlugin } = require("extract-media-query-plugin");
+// const { ExtractMediaQueriesPlugin } = require("extract-media-query-plugin");
+const { ExtractMediaQueriesPlugin } = require("./src/plugin");
 
 module.exports = {
     entry: "./src/index.tsx",
