@@ -13,7 +13,7 @@ A webpack plugin which extracts media queries from all your compiled `css` into 
 In your `webpack.config.js` `rules` section
 
 ```
-const { ExtractMediaQueriesPlugin } = require("extract-media-query-plugin");;
+const { ExtractMediaQueriesPlugin } = require("extract-media-query-plugin");
 
   {
     test: /\.scss$/i,
