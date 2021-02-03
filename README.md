@@ -29,7 +29,7 @@ and in your plugins
     new HtmlWebpackPlugin({
         template: path.resolve(__dirname, "src", "index.html"),
     }),
-    new ExtractMediaQueriesPlugin(),
+    new ExtractMediaQueriesPlugin({}),
     new MiniCssExtractPlugin({
         linkType: "text/css",
     }),
