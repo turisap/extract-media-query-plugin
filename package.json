@@ -1,9 +1,11 @@
 {
     "name": "extract-media-query-plugin",
-    "version": "1.0.8",
+    "version": "1.0.10",
     "main": "./lib/index.js",
     "files": [
-        "lib"
+        "lib",
+        "package.json",
+        "README.md"
     ],
     "repository": "git@github.com:turisap/extract-media-query-plugin.git",
     "author": "turisap <kirillshakirov57@gmail.com>",
