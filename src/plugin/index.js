@@ -115,7 +115,7 @@ class ExtractMediaQueriesPlugin {
     _process(compilation) {
         const assets = compilation.assets;
         const assetStyleNames = Object.keys(assets).filter((assetName) => {
-            return /^\w+.css$/.test(assetName);
+            return /\w+.css$/.test(assetName);
         });
 
         if (!Boolean(assetStyleNames.length)) return Promise.resolve(null);
