@@ -1,6 +1,6 @@
 {
     "name": "extract-media-query-plugin",
-    "version": "1.0.18",
+    "version": "1.0.19",
     "main": "./lib/index.js",
     "files": [
         "lib",
@@ -23,7 +23,7 @@
     "scripts": {
         "start": "webpack serve",
         "build": "webpack --env production",
-        "prepublish": "yarn run build:lib",
+        "prepublish": "yarn build:lib",
         "build:lib": "cross-env NODE_ENV=production babel src/plugin/** -d lib --copy-files",
         "lint:es": "eslint --ext .js src/"
     },
