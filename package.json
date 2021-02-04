@@ -1,9 +1,9 @@
 {
     "name": "extract-media-query-plugin",
-    "version": "1.0.19",
+    "version": "1.0.20",
     "main": "./lib/index.js",
     "files": [
-        "lib",
+        "lib/**",
         "package.json",
         "README.md"
     ],
