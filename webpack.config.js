@@ -36,9 +36,7 @@ module.exports = {
             template: path.resolve(__dirname, "src", "index.html"),
         }),
         new CleanWebpackPlugin(),
-        new ExtractMediaQueriesPlugin({
-            oneFile: true,
-        }),
+        new ExtractMediaQueriesPlugin(),
         new MiniCssExtractPlugin({
             linkType: "text/css",
         }),

@@ -29,14 +29,16 @@ and in your plugins
     new HtmlWebpackPlugin({
         template: path.resolve(__dirname, "src", "index.html"),
     }),
-    new ExtractMediaQueriesPlugin({}),
+    new ExtractMediaQueriesPlugin({
+        fileName: "queries.css", // this is the default filename
+    }),
     new MiniCssExtractPlugin({
         linkType: "text/css",
     }),
   ]
 ```
 
-Keep in mind that the plugin is used along with `MiniCssExtractPlugin.loader` and `css-loader`. Also, `MiniCssExtractPlugin` was used to extract `css` to process as well as `HtmlWebpackPlugin` to insert the newly created stylesheet into the html. I am not sure how it will work with other setups if it will :) However, you can you `less-loader` or other loaders to process your styles, just bear in mind that this plugin relies on the fact that all your styles have been processed and emitted as a separate asset.
+Keep in mind that the plugin is used along with `MiniCssExtractPlugin.loader` and `css-loader`. Also, `MiniCssExtractPlugin` was used to extract styles to later process by the plugin as well as `HtmlWebpackPlugin` to insert the newly created stylesheet into the html. I am not sure how it will work with other setups if it will :) However, you can you `less-loader` or other loaders to process your styles, just bear in mind that this plugin relies on the fact that all your styles have been processed and emitted as a separate stylesheet.
 
 ## Contributing
 

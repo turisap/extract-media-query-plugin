@@ -23,7 +23,7 @@ class ExtractMediaQueriesPlugin {
     #sortingMap;
 
     constructor(options) {
-        this.#options = options;
+        this.#options = options || {};
         this.#sortingMap = {};
         this.#options.fileName = this.#options.fileName ?? "queries.css";
         this._validateOptions();
